@@ -13,9 +13,14 @@ struct ContentView: View {
     @State private var isFocusMode: Bool = true
 
     var body: some View {
-        WriterEditor(text: text, isFocusMode: isFocusMode)
-            .frame(maxWidth: 800)
-            .frame(maxWidth: .infinity)
+        let writerBackground = Color(NSColor.textBackgroundColor)
+        
+        ZStack(alignment: .topTrailing) {
+            writerBackground.ignoresSafeArea()
+            WriterEditor(text: text, isFocusMode: isFocusMode)
+                .frame(maxWidth: 800)
+                .frame(maxWidth: .infinity)
+        }
     }
 }
 

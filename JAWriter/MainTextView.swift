@@ -19,6 +19,7 @@ class JAWriterMainTextView : NSTextView {
         updateFocusEffect()
     }
     
+    
     func updateFocusEffect() {
         guard let storage = textStorage else { return }
 
@@ -44,6 +45,27 @@ class JAWriterMainTextView : NSTextView {
         
         storage.endEditing()
     }
+    
+    // This intercepts the Cmd+V action
+    override func paste(_ sender: Any?) {
+        // 1. Pull the string only (stripping attributes) from the clipboard
+        let pb = NSPasteboard.general
+        if let items = pb.readObjects(forClasses: [NSString.self], options: nil),
+           let string = items.first as? String {
+            
+            // 2. Insert it at the current cursor position
+            self.insertText(string, replacementRange: self.selectedRange())
+            
+            // 3. Re-apply your theme font to ensure nothing changed
+            self.font = NSFont.monospacedSystemFont(ofSize: 18, weight: .regular)
+        }
+    }
+    
+    // Optional: Re-trigger focus mode after a paste
+    override func insertText(_ insertString: Any, replacementRange: NSRange) {
+        super.insertText(insertString, replacementRange: replacementRange)
+        updateFocusEffect()
+    }
 }
 
 struct WriterEditor: NSViewRepresentable {
@@ -53,15 +75,23 @@ struct WriterEditor: NSViewRepresentable {
     func makeNSView(context: Context) -> NSScrollView {
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
+        scrollView.drawsBackground = false
         
         let textView = JAWriterMainTextView(frame: .zero)
         textView.isFocusModeEnabled = isFocusMode
         textView.autoresizingMask = [.width]
         textView.isVerticallyResizable = true
         textView.allowsUndo = true
+        textView.drawsBackground = false
+        textView.isRichText = false
+        textView.importsGraphics = false
         
         // Font setup (iA Writer uses specific measure/width)
         textView.font = NSFont.monospacedSystemFont(ofSize: 18, weight: .regular)
+        textView.typingAttributes = [
+            .font: NSFont.monospacedSystemFont(ofSize: 18, weight: .regular),
+            .foregroundColor: NSColor.labelColor
+        ]
         textView.textContainerInset = NSSize(width: 40, height: 40)
         
         scrollView.documentView = textView
