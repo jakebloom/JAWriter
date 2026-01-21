@@ -11,12 +11,13 @@ import SwiftData
 struct ContentView: View {
     @State private var text: String = ""
     @State private var isFocusMode: Bool = false
-
+    @State private var visibility = NavigationSplitViewVisibility.all
+    
     var body: some View {
         let writerBackground = Color(NSColor.textBackgroundColor)
         
-        NavigationSplitView {
-            EmptyView()
+        NavigationSplitView(columnVisibility: $visibility) {
+            EmptyView().toolbar(removing: .sidebarToggle)
         } detail: {
             ZStack(alignment: .bottomTrailing) {
                 writerBackground.ignoresSafeArea()
@@ -35,6 +36,14 @@ struct ContentView: View {
         }.onContinuousHover { _ in
             withAnimation(.easeInOut(duration: 0.4)) {
                 self.isFocusMode = false
+            }
+        }.onChange(of: isFocusMode) {
+            withAnimation(.spring) {
+                if isFocusMode {
+                    visibility = NavigationSplitViewVisibility.detailOnly
+                } else {
+                    visibility = NavigationSplitViewVisibility.all
+                }
             }
         }
     }

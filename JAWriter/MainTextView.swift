@@ -115,7 +115,9 @@ struct WriterEditor: NSViewRepresentable {
         if textView.string != text {
             textView.string = text
         }
-        textView.isFocusModeEnabled = isFocusMode
+        if textView.isFocusModeEnabled != isFocusMode {
+            textView.isFocusModeEnabled = isFocusMode
+        }
     }
 
     func makeCoordinator() -> Coordinator {
