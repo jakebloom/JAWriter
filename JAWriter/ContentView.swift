@@ -16,18 +16,26 @@ struct ContentView: View {
         let writerBackground = Color(NSColor.textBackgroundColor)
         
         NavigationSplitView {
-            
+            EmptyView()
         } detail: {
             ZStack(alignment: .bottomTrailing) {
                 writerBackground.ignoresSafeArea()
-                WriterEditor(text: $text, isFocusMode: isFocusMode)
+                
+                WriterEditor(text: $text, isFocusMode: $isFocusMode)
                     .frame(maxWidth: 800)
                     .frame(maxWidth: .infinity)
-                    .padding(.bottom, 20)
-                if (!isFocusMode) {
-                    WordCountBar(count: text.wordCount).transition(.opacity)
-                }
-            }.animation(.easeInOut, value: isFocusMode)
+
+                WordCountBar(count: text.wordCount)
+                    .opacity(isFocusMode ? 0.0 : 1.0)
+            }
+        }.onReceive(NotificationCenter.default.publisher(for: NSWindow.didResignKeyNotification)) { _ in
+            withAnimation(.easeInOut(duration: 0.4)) {
+                self.isFocusMode = false
+            }
+        }.onContinuousHover { _ in
+            withAnimation(.easeInOut(duration: 0.4)) {
+                self.isFocusMode = false
+            }
         }
     }
 }

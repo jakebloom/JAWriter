@@ -10,7 +10,7 @@ import AppKit
 import SwiftUI
 
 class JAWriterMainTextView : NSTextView {
-    var isFocusModeEnabled: Bool = true {
+    var isFocusModeEnabled: Bool = false {
         didSet { updateFocusEffect() }
     }
     
@@ -81,7 +81,7 @@ class JAWriterMainTextView : NSTextView {
 
 struct WriterEditor: NSViewRepresentable {
     @Binding var text: String
-    var isFocusMode: Bool
+    @Binding var isFocusMode: Bool
 
     func makeNSView(context: Context) -> NSScrollView {
         let scrollView = NSScrollView()
@@ -129,6 +129,9 @@ struct WriterEditor: NSViewRepresentable {
         func textDidChange(_ notification: Notification) {
             guard let textView = notification.object as? NSTextView else { return }
             self.parent.text = textView.string
+            withAnimation(.easeInOut(duration: 0.4)) {
+                self.parent.isFocusMode = true
+            }
         }
     }
 }
