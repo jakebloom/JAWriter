@@ -28,29 +28,33 @@ class JAWriterMainTextView : NSTextView {
     
 
     func updateFocusEffect() {
-        guard let storage = textStorage else { return }
-
-        // 1. Reset everything to a "dimmed" state
-        let fullRange = NSRange(location: 0, length: storage.length)
-        let dimmedColor = NSColor.secondaryLabelColor.withAlphaComponent(0.3)
-        let activeColor = NSColor.labelColor
-        
-        storage.beginEditing()
-        
-        if isFocusModeEnabled {
-            // Dim all text
-            storage.addAttribute(.foregroundColor, value: dimmedColor, range: fullRange)
+        guard let layoutManager = self.layoutManager,
+                  let storage = self.textStorage else { return }
             
-            // 2. Highlight ONLY the current paragraph
-            let currentRange = self.selectedRange()
-            let paragraphRange = (storage.string as NSString).paragraphRange(for: currentRange)
-            storage.addAttribute(.foregroundColor, value: activeColor, range: paragraphRange)
-        } else {
-            // Reset to normal
-            storage.addAttribute(.foregroundColor, value: activeColor, range: fullRange)
-        }
-        
-        storage.endEditing()
+            let fullRange = NSRange(location: 0, length: storage.length)
+            
+            // 1. Force clear everything
+            layoutManager.removeTemporaryAttribute(.foregroundColor, forCharacterRange: fullRange)
+            
+            // 2. Explicitly grab the current dynamic colors
+            let activeColor = NSColor.labelColor
+            let dimmedColor = NSColor.secondaryLabelColor.withAlphaComponent(0.3)
+            
+            if isFocusModeEnabled {
+                // Apply dimming to all
+                layoutManager.addTemporaryAttributes([.foregroundColor: dimmedColor], forCharacterRange: fullRange)
+                
+                // Remove dimming from the active paragraph
+                let currentRange = self.selectedRange()
+                let paragraphRange = (storage.string as NSString).paragraphRange(for: currentRange)
+                
+                // This forces the active paragraph back to the dynamic 'labelColor'
+                layoutManager.removeTemporaryAttribute(.foregroundColor, forCharacterRange: paragraphRange)
+                layoutManager.addTemporaryAttributes([.foregroundColor: activeColor], forCharacterRange: paragraphRange)
+            } else {
+                // Reset the entire doc to the dynamic labelColor
+                layoutManager.addTemporaryAttributes([.foregroundColor: activeColor], forCharacterRange: fullRange)
+            }
     }
     
     // This intercepts the Cmd+V action
