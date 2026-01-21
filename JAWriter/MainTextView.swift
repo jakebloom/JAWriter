@@ -14,12 +14,19 @@ class JAWriterMainTextView : NSTextView {
         didSet { updateFocusEffect() }
     }
     
-    override func setSelectedRange(_ charRange: NSRange, affinity: NSSelectionAffinity, stillSelecting stillSelectingFlag: Bool) {
-        super.setSelectedRange(charRange, affinity: affinity, stillSelecting: stillSelectingFlag)
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
         updateFocusEffect()
     }
     
+    override func setSelectedRange(_ charRange: NSRange, affinity: NSSelectionAffinity, stillSelecting stillSelectingFlag: Bool) {
+        super.setSelectedRange(charRange, affinity: affinity, stillSelecting: stillSelectingFlag)
+        if !stillSelectingFlag {
+            updateFocusEffect()
+        }
+    }
     
+
     func updateFocusEffect() {
         guard let storage = textStorage else { return }
 
@@ -61,7 +68,7 @@ class JAWriterMainTextView : NSTextView {
         }
     }
     
-    // Optional: Re-trigger focus mode after a paste
+    // Re-trigger focus mode after a paste
     override func insertText(_ insertString: Any, replacementRange: NSRange) {
         super.insertText(insertString, replacementRange: replacementRange)
         updateFocusEffect()
@@ -92,7 +99,7 @@ struct WriterEditor: NSViewRepresentable {
             .font: NSFont.monospacedSystemFont(ofSize: 18, weight: .regular),
             .foregroundColor: NSColor.labelColor
         ]
-        textView.textContainerInset = NSSize(width: 40, height: 40)
+        textView.textContainerInset = NSSize(width: 0, height: 80)
         
         scrollView.documentView = textView
         textView.delegate = context.coordinator

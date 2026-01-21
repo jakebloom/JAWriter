@@ -20,6 +20,7 @@ struct ContentView: View {
             WriterEditor(text: text, isFocusMode: isFocusMode)
                 .frame(maxWidth: 800)
                 .frame(maxWidth: .infinity)
+                .padding(.bottom, 20)
         }
     }
 }
