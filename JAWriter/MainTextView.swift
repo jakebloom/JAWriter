@@ -80,7 +80,7 @@ class JAWriterMainTextView : NSTextView {
 }
 
 struct WriterEditor: NSViewRepresentable {
-    var text: String
+    @Binding var text: String
     var isFocusMode: Bool
 
     func makeNSView(context: Context) -> NSScrollView {
