@@ -8,11 +8,14 @@
 import Foundation
 import AppKit
 import SwiftUI
+import QuartzCore
 
 class JAWriterMainTextView : NSTextView {
     var isFocusModeEnabled: Bool = false {
         didSet { updateFocusEffect() }
     }
+    
+    private var colorAnimationTimer: Timer?
     
     override func viewDidChangeEffectiveAppearance() {
         super.viewDidChangeEffectiveAppearance()
@@ -28,33 +31,118 @@ class JAWriterMainTextView : NSTextView {
     
 
     func updateFocusEffect() {
-        guard let layoutManager = self.layoutManager,
-                  let storage = self.textStorage else { return }
-            
-            let fullRange = NSRange(location: 0, length: storage.length)
-            
-            // 1. Force clear everything
-            layoutManager.removeTemporaryAttribute(.foregroundColor, forCharacterRange: fullRange)
-            
-            // 2. Explicitly grab the current dynamic colors
-            let activeColor = NSColor.labelColor
-            let dimmedColor = NSColor.secondaryLabelColor.withAlphaComponent(0.3)
-            
-            if isFocusModeEnabled {
-                // Apply dimming to all
-                layoutManager.addTemporaryAttributes([.foregroundColor: dimmedColor], forCharacterRange: fullRange)
-                
-                // Remove dimming from the active paragraph
-                let currentRange = self.selectedRange()
-                let paragraphRange = (storage.string as NSString).paragraphRange(for: currentRange)
-                
-                // This forces the active paragraph back to the dynamic 'labelColor'
-                layoutManager.removeTemporaryAttribute(.foregroundColor, forCharacterRange: paragraphRange)
-                layoutManager.addTemporaryAttributes([.foregroundColor: activeColor], forCharacterRange: paragraphRange)
-            } else {
-                // Reset the entire doc to the dynamic labelColor
-                layoutManager.addTemporaryAttributes([.foregroundColor: activeColor], forCharacterRange: fullRange)
+        // Cancel any existing animation
+        colorAnimationTimer?.invalidate()
+        colorAnimationTimer = nil
+        
+        guard isFocusModeEnabled else {
+            // Reset all text to primary color when focus mode is disabled
+            let textStorage = self.textStorage!
+            let fullRange = NSRange(location: 0, length: textStorage.length)
+            textStorage.beginEditing()
+            textStorage.addAttribute(.foregroundColor, value: NSColor.labelColor, range: fullRange)
+            textStorage.endEditing()
+            return
+        }
+        
+        let textStorage = self.textStorage!
+        let fullRange = NSRange(location: 0, length: textStorage.length)
+        
+        // Get the cursor position
+        let cursorLocation = self.selectedRange().location
+        
+        // Find the paragraph range containing the cursor
+        let paragraphRange = (self.string as NSString).paragraphRange(for: NSRange(location: cursorLocation, length: 0))
+        
+        // Get primary and secondary colors
+        let primaryColor = NSColor.labelColor
+        let secondaryColor = NSColor.secondaryLabelColor.withAlphaComponent(0.3)
+        
+        // Get current colors for interpolation
+        var startColors: [Int: NSColor] = [:]
+        textStorage.enumerateAttribute(.foregroundColor, in: fullRange, options: []) { value, range, _ in
+            if let color = value as? NSColor {
+                for i in range.location..<(range.location + range.length) {
+                    startColors[i] = color
+                }
             }
+        }
+        
+        // Animation parameters
+        let duration: TimeInterval = 0.4
+        let startTime = Date()
+        
+        // Animate color interpolation
+        colorAnimationTimer = Timer.scheduledTimer(withTimeInterval: 1.0/60.0, repeats: true) { [weak self] timer in
+            guard let self = self else {
+                timer.invalidate()
+                return
+            }
+            
+            let elapsed = Date().timeIntervalSince(startTime)
+            let progress = min(elapsed / duration, 1.0)
+            
+            // Apply easeInOut easing function
+            let easedProgress: CGFloat
+            if progress < 0.5 {
+                easedProgress = CGFloat(2 * progress * progress)
+            } else {
+                easedProgress = CGFloat(1 - pow(-2 * progress + 2, 2) / 2)
+            }
+            
+            if progress >= 1.0 {
+                // Animation complete - set final colors
+                textStorage.beginEditing()
+                textStorage.addAttribute(.foregroundColor, value: secondaryColor, range: fullRange)
+                if paragraphRange.length > 0 {
+                    textStorage.addAttribute(.foregroundColor, value: primaryColor, range: paragraphRange)
+                }
+                textStorage.endEditing()
+                timer.invalidate()
+                self.colorAnimationTimer = nil
+            } else {
+                // Interpolate colors
+                textStorage.beginEditing()
+                
+                // Interpolate each character's color
+                for i in 0..<textStorage.length {
+                    let targetColor: NSColor
+                    // Check if index is within paragraph range
+                    if i >= paragraphRange.location && i < paragraphRange.location + paragraphRange.length {
+                        targetColor = primaryColor
+                    } else {
+                        targetColor = secondaryColor
+                    }
+                    
+                    let startColor = startColors[i] ?? NSColor.labelColor
+                    let interpolatedColor = self.interpolateColor(from: startColor, to: targetColor, progress: easedProgress)
+                    
+                    textStorage.addAttribute(.foregroundColor, value: interpolatedColor, range: NSRange(location: i, length: 1))
+                }
+                
+                textStorage.endEditing()
+            }
+        }
+    }
+    
+    private func interpolateColor(from: NSColor, to: NSColor, progress: CGFloat) -> NSColor {
+        // Convert both colors to the same color space (sRGB)
+        let sRGBColorSpace = CGColorSpaceCreateDeviceRGB()
+        guard let fromCG = from.cgColor.converted(to: sRGBColorSpace, intent: .defaultIntent, options: nil),
+              let toCG = to.cgColor.converted(to: sRGBColorSpace, intent: .defaultIntent, options: nil) else {
+            // Fallback if conversion fails
+            return progress < 0.5 ? from : to
+        }
+        
+        let fromComponents = fromCG.components ?? [0, 0, 0, 1]
+        let toComponents = toCG.components ?? [0, 0, 0, 1]
+        
+        let r = fromComponents[0] + (toComponents[0] - fromComponents[0]) * progress
+        let g = fromComponents[1] + (toComponents[1] - fromComponents[1]) * progress
+        let b = fromComponents[2] + (toComponents[2] - fromComponents[2]) * progress
+        let a = (fromComponents.count > 3 ? fromComponents[3] : 1.0) + ((toComponents.count > 3 ? toComponents[3] : 1.0) - (fromComponents.count > 3 ? fromComponents[3] : 1.0)) * progress
+        
+        return NSColor(calibratedRed: r, green: g, blue: b, alpha: a)
     }
     
     // This intercepts the Cmd+V action
