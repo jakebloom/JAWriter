@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2310430E2F21E6B300106E99 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 2310430D2F21E6B300106E99 /* GoogleSignIn */; };
+		231043102F21E6B300106E99 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2310430F2F21E6B300106E99 /* GoogleSignInSwift */; };
+		231043132F21E7B200106E99 /* GoogleAPIClientForRESTCore in Frameworks */ = {isa = PBXBuildFile; productRef = 231043122F21E7B200106E99 /* GoogleAPIClientForRESTCore */; };
+		231043152F21E7B200106E99 /* GoogleAPIClientForREST_Docs in Frameworks */ = {isa = PBXBuildFile; productRef = 231043142F21E7B200106E99 /* GoogleAPIClientForREST_Docs */; };
+		231043172F21E7B200106E99 /* GoogleAPIClientForREST_Drive in Frameworks */ = {isa = PBXBuildFile; productRef = 231043162F21E7B200106E99 /* GoogleAPIClientForREST_Drive */; };
 		2360577F2F213510006F5058 /* notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 2360577E2F213508006F5058 /* notes.md */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +33,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2310430E2F21E6B300106E99 /* GoogleSignIn in Frameworks */,
+				231043132F21E7B200106E99 /* GoogleAPIClientForRESTCore in Frameworks */,
+				231043152F21E7B200106E99 /* GoogleAPIClientForREST_Docs in Frameworks */,
+				231043102F21E6B300106E99 /* GoogleSignInSwift in Frameworks */,
+				231043172F21E7B200106E99 /* GoogleAPIClientForREST_Drive in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +81,11 @@
 			);
 			name = JAWriter;
 			packageProductDependencies = (
+				2310430D2F21E6B300106E99 /* GoogleSignIn */,
+				2310430F2F21E6B300106E99 /* GoogleSignInSwift */,
+				231043122F21E7B200106E99 /* GoogleAPIClientForRESTCore */,
+				231043142F21E7B200106E99 /* GoogleAPIClientForREST_Docs */,
+				231043162F21E7B200106E99 /* GoogleAPIClientForREST_Drive */,
 			);
 			productName = JAWriter;
 			productReference = 236057602F1F4844006F5058 /* JAWriter.app */;
@@ -100,6 +115,10 @@
 			);
 			mainGroup = 236057572F1F4844006F5058;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2310430C2F21E6B300106E99 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				231043112F21E7B200106E99 /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 236057612F1F4844006F5058 /* Products */;
 			projectDirPath = "";
@@ -251,12 +270,26 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = JAWriter/JAWriter.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V89CQD7PB;
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JAWriter/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = jAWriter;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -294,12 +327,26 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = JAWriter/JAWriter.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3V89CQD7PB;
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = JAWriter/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = jAWriter;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -354,6 +401,53 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2310430C2F21E6B300106E99 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
+		231043112F21E7B200106E99 /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/google-api-objectivec-client-for-rest";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2310430D2F21E6B300106E99 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2310430C2F21E6B300106E99 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		2310430F2F21E6B300106E99 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2310430C2F21E6B300106E99 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		231043122F21E7B200106E99 /* GoogleAPIClientForRESTCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 231043112F21E7B200106E99 /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */;
+			productName = GoogleAPIClientForRESTCore;
+		};
+		231043142F21E7B200106E99 /* GoogleAPIClientForREST_Docs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 231043112F21E7B200106E99 /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */;
+			productName = GoogleAPIClientForREST_Docs;
+		};
+		231043162F21E7B200106E99 /* GoogleAPIClientForREST_Drive */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 231043112F21E7B200106E99 /* XCRemoteSwiftPackageReference "google-api-objectivec-client-for-rest" */;
+			productName = GoogleAPIClientForREST_Drive;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 236057582F1F4844006F5058 /* Project object */;
 }

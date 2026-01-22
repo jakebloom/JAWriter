@@ -17,7 +17,7 @@ struct ContentView: View {
         let writerBackground = Color(NSColor.textBackgroundColor)
         
         NavigationSplitView(columnVisibility: $visibility) {
-            EmptyView().toolbar(removing: .sidebarToggle)
+            SidebarView().toolbar(removing: .sidebarToggle)
         } detail: {
             ZStack(alignment: .bottomTrailing) {
                 writerBackground.ignoresSafeArea()
