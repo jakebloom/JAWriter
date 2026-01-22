@@ -33,4 +33,26 @@ class GoogleDocsService {
             completion(fileList?.files)
         }
     }
+    
+    func downloadMarkdown(fileId: String, completion: @escaping (String?) -> Void) {
+        // 1. Construct the export URL for Markdown
+        let urlString = "https://www.googleapis.com/drive/v3/files/\(fileId)/export?mimeType=text/markdown"
+        guard let url = URL(string: urlString) else { return }
+        
+        // 2. Use the authorizer already attached to your driveService
+        let fetcher = driveService.fetcherService.fetcher(with: url)
+        
+        fetcher.beginFetch { data, error in
+            if let error = error {
+                print("Export failed: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            // 3. Convert the downloaded data into a UTF-8 string
+            if let data = data, let markdown = String(data: data, encoding: .utf8) {
+                completion(markdown)
+            }
+        }
+    }
 }

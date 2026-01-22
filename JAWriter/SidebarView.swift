@@ -11,18 +11,21 @@ import GoogleSignIn
 
 
 struct SidebarView: View {
+    @Binding var selectedDocumentId: String?
     @State private var authManager = GoogleAuthManager.shared
     @State private var driveFiles: [GTLRDrive_File] = []
     
     var body: some View {
         List {
             if let user = authManager.currentUser {
-                Text("Signed in as \(user.profile?.email ?? "User")")
+                Text("Hello \(user.profile?.givenName ?? "")")
                     .font(.caption)
                 
                 Section("Google Docs") {
                     ForEach(driveFiles, id: \.identifier) { file in
-                        Label(file.name ?? "Untitled", systemImage: "doc.text")
+                        Label(file.name ?? "Untitled", systemImage: "doc.text").onTapGesture {
+                            self.selectedDocumentId = file.identifier
+                        }
                     }
                 }
             } else {
