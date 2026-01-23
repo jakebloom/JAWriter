@@ -7,24 +7,33 @@
 
 import SwiftUI
 import SwiftData
+import GoogleAPIClientForREST_Docs
 
 struct ContentView: View {
     @State private var isFocusMode: Bool = false
     @State private var visibility = NavigationSplitViewVisibility.all
-    @State private var selectedDocumentId: String? = nil
+    @State private var googleManager: GoogleManager = GoogleManager()
     
     var body: some View {
         NavigationSplitView(columnVisibility: $visibility) {
-            SidebarView(selectedDocumentId: $selectedDocumentId).toolbar(removing: .sidebarToggle)
+            SidebarView()
+                .environment(googleManager)
+                .toolbar(removing: .sidebarToggle)
+        } content: {
+          TabListView()
+                .environment(googleManager)
         } detail: {
-            EditorWrapper(isFocusMode: $isFocusMode, selectedDocumentId: $selectedDocumentId)
+            EditorWrapper(isFocusMode: $isFocusMode)
+                .environment(googleManager)
         }.onReceive(NotificationCenter.default.publisher(for: NSWindow.didResignKeyNotification)) { _ in
             withAnimation(.easeInOut(duration: 0.4)) {
                 self.isFocusMode = false
+                print("unset focus mode (lost focus)")
             }
         }.onContinuousHover { _ in
             withAnimation(.easeInOut(duration: 0.4)) {
                 self.isFocusMode = false
+                print("unset focus mode (mouse move)")
             }
         }.onChange(of: isFocusMode) {
             withAnimation(.spring) {
@@ -34,6 +43,8 @@ struct ContentView: View {
                     visibility = NavigationSplitViewVisibility.all
                 }
             }
+        }.onAppear() {
+            googleManager.restoreSignIn()
         }
     }
 }

@@ -7,48 +7,31 @@
 
 import SwiftUI
 import GoogleAPIClientForREST_Drive
+import GoogleAPIClientForREST_Docs
 import GoogleSignIn
 
 
 struct SidebarView: View {
-    @Binding var selectedDocumentId: String?
-    @State private var authManager = GoogleAuthManager.shared
-    @State private var driveFiles: [GTLRDrive_File] = []
+    @Environment(GoogleManager.self) private var googleManager
     
     var body: some View {
         List {
-            if let user = authManager.currentUser {
+            if let user = googleManager.currentUser {
                 Text("Hello \(user.profile?.givenName ?? "")")
                     .font(.caption)
                 
                 Section("Google Docs") {
-                    ForEach(driveFiles, id: \.identifier) { file in
+                    ForEach(googleManager.files, id: \.identifier) { file in
                         Label(file.name ?? "Untitled", systemImage: "doc.text").onTapGesture {
-                            self.selectedDocumentId = file.identifier
+                            guard let fileId = file.identifier else { return }
+                            googleManager.downloadDocument(fileId: fileId)
                         }
                     }
                 }
             } else {
                 Button("Sign in to Google") {
-                    authManager.signIn()
+                    googleManager.signIn()
                 }
-            }
-        }
-        .onAppear {
-            if let user = authManager.currentUser {
-                fetchFiles(for: user)
-            }
-        }
-        // Refresh when user signs in
-        .onChange(of: authManager.currentUser) { _, newUser in
-            if let user = newUser { fetchFiles(for: user) }
-        }
-    }
-
-    func fetchFiles(for user: GIDGoogleUser) {
-        GoogleDocsService(user: user).listDocuments { files in
-            if let files = files {
-                self.driveFiles = files
             }
         }
     }

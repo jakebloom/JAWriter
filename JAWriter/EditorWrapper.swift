@@ -6,12 +6,12 @@
 //  Intended to keep track of string state
 
 import SwiftUI
+import GoogleAPIClientForREST_Docs
 
 struct EditorWrapper: View {
     @State private var text: String = ""
     @Binding var isFocusMode: Bool
-    @Binding var selectedDocumentId: String?
-    @State private var authManager = GoogleAuthManager.shared
+    @Environment(GoogleManager.self) var googleManager
 
     var body: some View {
         let writerBackground = Color(NSColor.textBackgroundColor)
@@ -22,16 +22,18 @@ struct EditorWrapper: View {
                 .frame(maxWidth: .infinity)
             WordCountBar(count: text.wordCount)
                 .opacity(isFocusMode ? 0.0 : 1.0)
-        }.onChange(of: selectedDocumentId) {
-            fetchDocument()
+        }
+        .onChange(of: googleManager.selectedTab) {
+            setText()
         }
     }
     
-    func fetchDocument() {
-        guard let selectedDocumentId = selectedDocumentId,
-            let currentUser = authManager.currentUser else { return }
-        GoogleDocsService(user: currentUser).downloadMarkdown(fileId: selectedDocumentId) { res in
-            self.text = res ?? self.text
+    func setText() {
+        guard let tab = googleManager.selectedTab else {
+            self.text = ""
+            return
         }
+        
+        self.text = "AHHHHHH"
     }
 }
