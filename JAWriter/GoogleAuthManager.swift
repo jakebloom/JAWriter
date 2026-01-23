@@ -11,7 +11,8 @@ class GoogleAuthManager {
     // Scopes required for listing and editing
     let scopes = [
         kGTLRAuthScopeDriveMetadataReadonly,
-        kGTLRAuthScopeDocsDocuments
+        kGTLRAuthScopeDocsDocuments,
+        kGTLRAuthScopeDrive,
     ]
     
     init() {
