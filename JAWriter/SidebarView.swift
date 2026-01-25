@@ -22,10 +22,8 @@ struct SidebarView: View {
                 
                 Section("Google Docs") {
                     ForEach(googleManager.files, id: \.identifier) { file in
-                        Label(file.name ?? "Untitled", systemImage: "doc.text").onTapGesture {
-                            guard let fileId = file.identifier else { return }
-                            googleManager.downloadDocument(fileId: fileId)
-                        }
+                        SidebarItem(file: file)
+                            .environment(googleManager)
                     }
                 }
             } else {

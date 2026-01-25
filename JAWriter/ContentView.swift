@@ -19,9 +19,6 @@ struct ContentView: View {
             SidebarView()
                 .environment(googleManager)
                 .toolbar(removing: .sidebarToggle)
-        } content: {
-          TabListView()
-                .environment(googleManager)
         } detail: {
             EditorWrapper(isFocusMode: $isFocusMode)
                 .environment(googleManager)

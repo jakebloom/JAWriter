@@ -88,6 +88,9 @@ class GoogleManager {
             }
             
             self.selectedDocument = result
+            if let tabs = result.tabs {
+                self.selectedTab = tabs[0]
+            }
         }
     }
 }

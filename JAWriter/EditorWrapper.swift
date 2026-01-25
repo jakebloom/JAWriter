@@ -34,6 +34,6 @@ struct EditorWrapper: View {
             return
         }
         
-        self.text = "AHHHHHH"
+        self.text = tab.tabProperties?.title ?? "Untitlted Tab"
     }
 }
