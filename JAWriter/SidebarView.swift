@@ -20,7 +20,7 @@ struct SidebarView: View {
                 Text("Hello \(user.profile?.givenName ?? "")")
                     .font(.caption)
                 
-                Section("Google Docs") {
+                Section("Documents") {
                     ForEach(googleManager.files, id: \.identifier) { file in
                         SidebarItem(file: file)
                             .environment(googleManager)

@@ -29,11 +29,19 @@ struct EditorWrapper: View {
     }
     
     func setText() {
-        guard let tab = googleManager.selectedTab else {
+        guard let tab = googleManager.selectedTab,
+            let body = tab.documentTab?.body,
+            let content = body.content else {
             self.text = ""
             return
         }
         
-        self.text = tab.tabProperties?.title ?? "Untitlted Tab"
+        let textContent = content.compactMap { element in
+            element.paragraph?.elements?.compactMap { pElement in
+                pElement.textRun?.content
+            }
+        }.flatMap { $0 }
+        
+        self.text = textContent.joined()
     }
 }

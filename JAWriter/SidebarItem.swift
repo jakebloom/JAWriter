@@ -23,21 +23,32 @@ struct SidebarItem : View {
         )
         DisclosureGroup(isExpanded: isExpanded, content: {
             if let tabs: [GTLRDocs_Tab] = googleManager.selectedDocument?.tabs {
-                if tabs.count > 1 {
-                    ForEach(tabs, id: \.tabProperties?.tabId) { tab in
-                        Text(tab.tabProperties?.title ?? "")
-                            .onTapGesture {
-                                googleManager.selectedTab = tab
-                            }
+                
+                ForEach(tabs, id: \.tabProperties?.tabId) { tab in
+                    var isSelected: Bool {
+                        googleManager.selectedTab?.tabProperties?.tabId == tab.tabProperties?.tabId
                     }
+                    HStack {
+                        Label(tab.tabProperties?.title ?? "", systemImage: "")
+                        Spacer()
+                    }
+                    .onTapGesture {
+                        googleManager.selectedTab = tab
+                    }
+                    .foregroundStyle(isSelected ? .white : .primary)
+                    .listRowBackground(isSelected ? Color.accentColor : Color.clear)
                 }
             }
         }, label: {
-            Label(file.name ?? "Untitled", systemImage: "doc.text")
-        }).onTapGesture {
-            guard let fileId = file.identifier else { return }
-            googleManager.downloadDocument(fileId: fileId)
-        }
+            HStack {
+                Label(file.name ?? "Untitled", systemImage: "doc.text")
+                Spacer()
+            }
+            .onTapGesture {
+                guard let fileId = file.identifier else { return }
+                googleManager.downloadDocument(fileId: fileId)
+            }
+        })
     }
 }
 

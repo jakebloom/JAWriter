@@ -25,12 +25,10 @@ struct ContentView: View {
         }.onReceive(NotificationCenter.default.publisher(for: NSWindow.didResignKeyNotification)) { _ in
             withAnimation(.easeInOut(duration: 0.4)) {
                 self.isFocusMode = false
-                print("unset focus mode (lost focus)")
             }
         }.onContinuousHover { _ in
             withAnimation(.easeInOut(duration: 0.4)) {
                 self.isFocusMode = false
-                print("unset focus mode (mouse move)")
             }
         }.onChange(of: isFocusMode) {
             withAnimation(.spring) {
