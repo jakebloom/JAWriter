@@ -29,7 +29,7 @@ struct SidebarItem : View {
                         googleManager.selectedTab?.tabProperties?.tabId == tab.tabProperties?.tabId
                     }
                     HStack {
-                        Label(tab.tabProperties?.title ?? "", systemImage: "")
+                        Text(tab.tabProperties?.title ?? "")
                         Spacer()
                     }
                     .onTapGesture {
@@ -41,7 +41,9 @@ struct SidebarItem : View {
             }
         }, label: {
             HStack {
-                Label(file.name ?? "Untitled", systemImage: "doc.text")
+                Text(file.name ?? "Untitled")
+                    .bold()
+                    .padding(.leading, 4.0)
                 Spacer()
             }
             .onTapGesture {
