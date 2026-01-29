@@ -16,17 +16,15 @@ struct SidebarItem : View {
         var isSelected: Bool {
             file == wFileManager.selectedDocument
         }
-        HStack {
-            Text(file.lastPathComponent)
-                .bold()
-                .padding(.leading, 4.0)
-            Spacer()
-        }
-        .foregroundStyle(isSelected ? .white : .primary)
-        .listRowBackground(isSelected ? Color.accentColor : Color.clear)
-        .onTapGesture {
-            wFileManager.selectedDocument = file
-        }
+
+        Text(file.lastPathComponent)
+            .onTapGesture {
+                wFileManager.selectedDocument = file
+            }
+            .bold()
+            .padding(.leading, 4.0)
+            .foregroundStyle(isSelected ? .white : .primary)
+            .listRowBackground(isSelected ? Color.accentColor : Color.clear)
     }
 }
 

@@ -14,28 +14,32 @@ struct SidebarView: View {
     @State private var isImporting = false
     
     var body: some View {
-        List {
-            if wFileManager.folder != nil {
-                Section {
-                    ForEach(wFileManager.files, id: \.absoluteString) { file in
-                        SidebarItem(file: file)
-                            .environment(wFileManager)
-                    }
-                }
-            } else {
-                Button("Open Folder") {
-                    isImporting = true
-                }
-                .fileImporter(isPresented: $isImporting, allowedContentTypes: [.folder]) { result in
-                    switch result {
-                    case .success(let url):
-                        wFileManager.setFolderUrl(url)
-                    case .failure(let error):
-                        print("File import error \(error.localizedDescription)")
-                    }
-                    isImporting = false
+        if wFileManager.folder != nil {
+            List {
+                ForEach(wFileManager.files, id: \.absoluteString) { file in
+                    SidebarItem(file: file)
+                        .environment(wFileManager)
+                }.onMove { from, to in
+                    print("FROM \(from) TO \(to)")
                 }
             }
+        } else {
+            Button("Open Folder") {
+                isImporting = true
+            }
+            .fileImporter(isPresented: $isImporting, allowedContentTypes: [.folder]) { result in
+                switch result {
+                case .success(let url):
+                    wFileManager.setFolderUrl(url)
+                case .failure(let error):
+                    print("File import error \(error.localizedDescription)")
+                }
+                isImporting = false
+            }
         }
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        
     }
 }
