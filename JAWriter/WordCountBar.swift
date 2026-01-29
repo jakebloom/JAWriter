@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WordCountBar: View {
     let count: Int
+    @Environment(WriterFileManager.self) var wFileManager
     
     var body: some View {
         HStack {

@@ -12,16 +12,16 @@ import GoogleAPIClientForREST_Docs
 struct ContentView: View {
     @State private var isFocusMode: Bool = false
     @State private var visibility = NavigationSplitViewVisibility.all
-    @State private var googleManager: GoogleManager = GoogleManager()
+    @State private var wFileManager: WriterFileManager = WriterFileManager()
     
     var body: some View {
         NavigationSplitView(columnVisibility: $visibility) {
             SidebarView()
-                .environment(googleManager)
+                .environment(wFileManager)
                 .toolbar(removing: .sidebarToggle)
         } detail: {
             EditorWrapper(isFocusMode: $isFocusMode)
-                .environment(googleManager)
+                .environment(wFileManager)
         }.onReceive(NotificationCenter.default.publisher(for: NSWindow.didResignKeyNotification)) { _ in
             withAnimation(.easeInOut(duration: 0.4)) {
                 self.isFocusMode = false
@@ -39,7 +39,7 @@ struct ContentView: View {
                 }
             }
         }.onAppear() {
-            googleManager.restoreSignIn()
+            wFileManager.listDocuments()
         }
     }
 }

@@ -6,29 +6,35 @@
 //
 
 import SwiftUI
-import GoogleAPIClientForREST_Drive
-import GoogleAPIClientForREST_Docs
-import GoogleSignIn
+internal import UniformTypeIdentifiers
 
 
 struct SidebarView: View {
-    @Environment(GoogleManager.self) private var googleManager
+    @Environment(WriterFileManager.self) private var wFileManager
+    @State private var isImporting = false
     
     var body: some View {
         List {
-            if let user = googleManager.currentUser {
-                Text("Hello \(user.profile?.givenName ?? "")")
-                    .font(.caption)
-                
-                Section("Documents") {
-                    ForEach(googleManager.files, id: \.identifier) { file in
+            if wFileManager.folder != nil {
+                Section {
+                    ForEach(wFileManager.files, id: \.absoluteString) { file in
                         SidebarItem(file: file)
-                            .environment(googleManager)
+                            .environment(wFileManager)
                     }
                 }
             } else {
-                Button("Sign in to Google") {
-                    googleManager.signIn()
+                Button("Open Folder") {
+                    isImporting = true
+                }
+                .fileImporter(isPresented: $isImporting, allowedContentTypes: [.folder]) { result in
+                    switch result {
+                    case .success(let url):
+                        wFileManager.folder = url
+                        wFileManager.listDocuments()
+                    case .failure(let error):
+                        print("File import error \(error.localizedDescription)")
+                    }
+                    isImporting = false
                 }
             }
         }

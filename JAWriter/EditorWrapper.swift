@@ -11,7 +11,7 @@ import GoogleAPIClientForREST_Docs
 struct EditorWrapper: View {
     @State private var text: String = ""
     @Binding var isFocusMode: Bool
-    @Environment(GoogleManager.self) var googleManager
+    @Environment(WriterFileManager.self) var wfileManager
 
     var body: some View {
         let writerBackground = Color(NSColor.textBackgroundColor)
@@ -22,26 +22,19 @@ struct EditorWrapper: View {
                 .frame(maxWidth: .infinity)
             WordCountBar(count: text.wordCount)
                 .opacity(isFocusMode ? 0.0 : 1.0)
+                .environment(wfileManager)
         }
-        .onChange(of: googleManager.selectedTab) {
+        .onChange(of: wfileManager.selectedDocument) {
             setText()
+        }
+        .onChange(of: isFocusMode) {
+            if !isFocusMode {
+                wfileManager.writeFile(text)
+            }
         }
     }
     
     func setText() {
-        guard let tab = googleManager.selectedTab,
-            let body = tab.documentTab?.body,
-            let content = body.content else {
-            self.text = ""
-            return
-        }
-        
-        let textContent = content.compactMap { element in
-            element.paragraph?.elements?.compactMap { pElement in
-                pElement.textRun?.content
-            }
-        }.flatMap { $0 }
-        
-        self.text = textContent.joined()
+        self.text = wfileManager.getText()
     }
 }
