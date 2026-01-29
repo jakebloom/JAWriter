@@ -32,7 +32,12 @@ class WriterFileManager {
     }
     
     func writeFile(_ contents: String) {
-        
+        guard let selectedDocument = selectedDocument else { return }
+        do {
+            try contents.write(to: selectedDocument, atomically: true, encoding: .utf8)
+        } catch {
+            print("File write error: \(error.localizedDescription)")
+        }
     }
     
     
