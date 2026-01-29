@@ -29,8 +29,7 @@ struct SidebarView: View {
                 .fileImporter(isPresented: $isImporting, allowedContentTypes: [.folder]) { result in
                     switch result {
                     case .success(let url):
-                        wFileManager.folder = url
-                        wFileManager.listDocuments()
+                        wFileManager.setFolderUrl(url)
                     case .failure(let error):
                         print("File import error \(error.localizedDescription)")
                     }

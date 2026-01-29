@@ -133,7 +133,6 @@ struct WriterEditor: NSViewRepresentable {
             self.parent.text = textView.string
             withAnimation(.easeInOut(duration: 0.4)) {
                 self.parent.isFocusMode = true
-                print("Set focus mode")
             }
         }
     }

@@ -1,5 +1,5 @@
 Next:
-- sync back to google docs
+- reorder files
 - minimum widths
 - Syntax highlighting
 - loading states
