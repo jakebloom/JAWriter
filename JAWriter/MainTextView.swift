@@ -46,7 +46,7 @@ class JAWriterMainTextView : NSTextView {
                 
                 // Remove dimming from the active paragraph
                 let currentRange = self.selectedRange()
-                let paragraphRange = (storage.string as NSString).paragraphRange(for: currentRange)
+                guard let paragraphRange = storage.string.getSentence(currentRange) else { return }
                 
                 // This forces the active paragraph back to the dynamic 'labelColor'
                 layoutManager.removeTemporaryAttribute(.foregroundColor, forCharacterRange: paragraphRange)
