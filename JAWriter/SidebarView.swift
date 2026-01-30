@@ -15,13 +15,33 @@ struct SidebarView: View {
     
     var body: some View {
         if wFileManager.folder != nil {
-            List {
-                ForEach(wFileManager.files, id: \.absoluteString) { file in
-                    SidebarItem(file: file)
-                        .environment(wFileManager)
-                }.onMove { from, to in
-                    print("FROM \(from) TO \(to)")
+            VStack {
+                List {
+                    ForEach(wFileManager.files, id: \.absoluteString) { file in
+                        SidebarItem(file: file)
+                            .environment(wFileManager)
+                    }.onMove { from, to in
+                        print("FROM \(from) TO \(to)")
+                    }
                 }
+                HStack {
+                    Button {
+                        wFileManager.listDocuments()
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                    }
+                    Spacer()
+                    Button {
+                        wFileManager.closeFolder()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+                .background(.ultraThinMaterial)
             }
         } else {
             Button("Open Folder") {

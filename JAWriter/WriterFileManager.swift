@@ -96,5 +96,12 @@ class WriterFileManager {
         folder?.stopAccessingSecurityScopedResource()
     }
     
+    func closeFolder() {
+        folder = nil
+        files = []
+        selectedDocument = nil
+        UserDefaults.standard.set(nil, forKey: "folderBookmark")
+    }
+    
     
 }

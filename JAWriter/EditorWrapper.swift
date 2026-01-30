@@ -17,12 +17,15 @@ struct EditorWrapper: View {
         let writerBackground = Color(NSColor.textBackgroundColor)
         ZStack(alignment: .bottomTrailing) {
             writerBackground.ignoresSafeArea()
-            WriterEditor(isFocusMode: $isFocusMode, text: $text)
-                .frame(maxWidth: 800)
-                .frame(maxWidth: .infinity)
-            WordCountBar(count: text.wordCount)
-                .opacity(isFocusMode ? 0.0 : 1.0)
-                .environment(wfileManager)
+            
+            if wfileManager.selectedDocument != nil {
+                WriterEditor(isFocusMode: $isFocusMode, text: $text)
+                    .frame(maxWidth: 800)
+                    .frame(maxWidth: .infinity)
+                WordCountBar(count: text.wordCount)
+                    .opacity(isFocusMode ? 0.0 : 1.0)
+                    .environment(wfileManager)
+            }
         }
         .onChange(of: wfileManager.selectedDocument) {
             setText()

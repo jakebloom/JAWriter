@@ -21,8 +21,15 @@ extension String {
             char == "." || char == "?" || char == "!" || char.isNewline
         }
         
+        if segments.count == 1 {
+            return NSRange(0...self.count)
+        }
+        
         if let target = segments.first(where: { $0.startIndex <= range.lowerBound && $0.endIndex >= range.upperBound }) {
-            return NSRange(target.startIndex...target.endIndex, in: self)
+            if target.count == 0 {
+                return nil
+            }
+            return NSRange(target.startIndex..<target.endIndex, in: self)
         }
         return nil
     }
