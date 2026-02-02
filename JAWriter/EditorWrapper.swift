@@ -6,7 +6,6 @@
 //  Intended to keep track of string state
 
 import SwiftUI
-import GoogleAPIClientForREST_Docs
 
 struct EditorWrapper: View {
     @State private var text: String = ""

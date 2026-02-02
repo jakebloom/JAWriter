@@ -1,5 +1,5 @@
 import Foundation
-
+import SwiftUI
 
 @Observable
 class WriterFileManager {
@@ -26,6 +26,16 @@ class WriterFileManager {
         }
         folder.stopAccessingSecurityScopedResource()
 
+        let savedOrder = UserDefaults.standard.stringArray(forKey: folder.path()) ?? []
+        files = files.sorted { url1, url2 in
+            let name1 = url1.lastPathComponent
+            let name2 = url2.lastPathComponent
+            
+            let index1 = savedOrder.firstIndex(of: name1) ?? Int.max
+            let index2 = savedOrder.firstIndex(of: name2) ?? Int.max
+            
+            return index1 < index2
+        }
     }
     
     func getText() -> String {
@@ -101,6 +111,14 @@ class WriterFileManager {
         files = []
         selectedDocument = nil
         UserDefaults.standard.set(nil, forKey: "folderBookmark")
+    }
+    
+    func moveFile(from: IndexSet, to: Int) {
+        guard let folder = folder else { return }
+        files.move(fromOffsets: from, toOffset: to)
+        
+        let fileNames = files.map { $0.lastPathComponent }
+        UserDefaults.standard.set(fileNames, forKey: folder.path())
     }
     
     

@@ -21,7 +21,7 @@ struct SidebarView: View {
                         SidebarItem(file: file)
                             .environment(wFileManager)
                     }.onMove { from, to in
-                        print("FROM \(from) TO \(to)")
+                        wFileManager.moveFile(from: from, to: to)
                     }
                 }
                 HStack {

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SwiftData
-import GoogleAPIClientForREST_Docs
 
 struct ContentView: View {
     @State private var isFocusMode: Bool = false
